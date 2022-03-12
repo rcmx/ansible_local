@@ -2,6 +2,7 @@
 playbooks for home IT
 
 # How to run
-ansible-pull -U https://github.com/xx.git
+ansible-pull -o -K -U https://github.com/rcmx/ansible_local.git
+
 
 
