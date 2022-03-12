@@ -1,0 +1,13 @@
+#- debug:
+#    msg: "base role - i am herer"
+
+- block:
+  # install users
+  - import_tasks: users/ansible.yml
+
+  # install software
+  - import_tasks: software/packages_utilities.yml
+
+  # configure software
+  - import_tasks: system_setup/tmux.yml
+

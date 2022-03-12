@@ -1,0 +1,11 @@
+- name: system setup | utilities | install utility packages 
+  tags: packages,system,settings
+  package:
+    state: latest
+    name:
+      - htop
+      - mc
+      - tmux
+      - wget
+      - zsh
+
