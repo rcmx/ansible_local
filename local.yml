@@ -1,0 +1,22 @@
+# tasks to complete before running roles
+- hosts: localhost
+  connection: local
+  become: true
+
+  pre_tasks:
+    - name: update repositories
+      tags: always
+      apt: update_cache=yes
+      changed_when: False
+#      register: out
+
+#    - debug: var=out
+
+# run roles
+- hosts: localhost 
+  connection: local
+  tags: base
+  become: true
+  roles:
+    - base
+
