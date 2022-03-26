@@ -3,12 +3,12 @@
     apt_repository:
       repo: "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} universe"
       state: present
-  - name: system setup | utilities | add powerline
-    package:
-      state: present
-      name:
-      - powerline
-      - fonts-powerline
+#  - name: system setup | utilities | add powerline
+#   package:
+#     state: present
+#     name:
+#     - powerline
+#     - fonts-powerline
   when: ansible_distribution == 'Ubuntu'
 
 

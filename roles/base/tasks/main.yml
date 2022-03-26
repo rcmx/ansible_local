@@ -3,6 +3,7 @@
 
 - block:
   # install users
+  - import_tasks: users/velez.yml
   - import_tasks: users/ansible.yml
 
   # install software
@@ -12,4 +13,5 @@
   - import_tasks: system_setup/tmux.yml
   - import_tasks: system_setup/cron.yml
   - import_tasks: system_setup/zsh.yml
+  - import_tasks: system_setup/vim.yml
 
