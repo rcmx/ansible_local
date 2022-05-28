@@ -3,6 +3,7 @@
 - name: users | create ansible user
   user:
     name: ansible
+    system: yes
     groups: sudo
     append: yes
     state: present
@@ -31,4 +32,13 @@
   authorized_key:
     user: velez
     key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOH+GDuX+7RjQhBp5CM0vJRH6s91BrYvm4boNyt6MTPr velez identity"
+
+- name: system setup | zsh | copy .zshrc
+  tags: zsh,system,settings
+  copy:
+    src: system_setup/zshrc
+    dest: /home/velez/.zshrc
+    owner: velez
+    group: velez
+    mode: 0644
 

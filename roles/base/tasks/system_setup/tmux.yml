@@ -1,8 +1,0 @@
-- name: system setup | tmux | copy tmux.conf
-  tags: tmux,system,settings
-  copy:
-    src: system_setup/tmux.conf
-    dest: /home/velez/.tmux.conf
-    owner: velez
-    group: velez
-    mode: 0644
