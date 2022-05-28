@@ -2,7 +2,7 @@
   tags: vim,system,settings
   copy:
     src: system_setup/vimrc
-    dest: /home/velez/.vim/vimrc
+    dest: /home/velez/.vim/
     owner: velez
     group: velez
     mode: 0644
