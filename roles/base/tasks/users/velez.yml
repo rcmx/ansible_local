@@ -1,27 +1,47 @@
-- name: users | velez | create group
-  tags: groups,velez,users
-  group:
-    name: velez
-    state: present
-
-- name: users | velez | create user
-  tags: velez,sudo,users
+- name: users | create velez user
   user:
     name: velez
-    group: velez
     groups: adm,ansible,sudo
+    append: yes
     state: present
-    comment: "velez"
-#    password: "{{ velez_passwd }}"
     shell: /bin/zsh
 
+- name: users | ssh | add velez ssh key
+  authorized_key:
+    user: velez
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOH+GDuX+7RjQhBp5CM0vJRH6s91BrYvm4boNyt6MTPr velez identity"
 
-- name: copy sudoers_velez
-  tags: velez,settings,sudo,system,users
-  ansible.builtin.copy:
-    src: users/sudoers_velez
-    dest: /etc/sudoers.d/velez
-    owner: root
-    group: root 
-    mode: 0440
+#- name: users | sudo | copy sudoers_velez
+#  copy:
+#    src: users/sudoers_velez
+#    dest: /etc/sudoers.d/velez
+#    owner: root
+#    group: root
+#    mode: 0440
+
+# configure software
+- name: users | tmux | copy tmux.conf
+  copy:
+    src: system_setup/tmux.conf
+    dest: /home/velez/.tmux.conf
+    owner: velez
+    group: velez
+    mode: 0644
+
+
+- name: users | vim | copy .vimrc
+  copy:
+    src: system_setup/vimrc
+    dest: /home/velez/.vim/
+    owner: velez
+    group: velez
+    mode: 0644
+
+- name: users | zsh | copy .zshrc
+  copy:
+    src: system_setup/zshrc
+    dest: /home/velez/.zshrc
+    owner: velez
+    group: velez
+    mode: 0644
 
