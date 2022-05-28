@@ -1,0 +1,27 @@
+- name: users | velez | create group
+  tags: groups,velez,users
+  group:
+    name: velez
+    state: present
+
+- name: users | velez | create user
+  tags: velez,sudo,users
+  user:
+    name: velez
+    group: velez
+    groups: adm,ansible,sudo
+    state: present
+    comment: "velez"
+#    password: "{{ velez_passwd }}"
+    shell: /bin/zsh
+
+
+- name: copy sudoers_velez
+  tags: velez,settings,sudo,system,users
+  ansible.builtin.copy:
+    src: users/sudoers_velez
+    dest: /etc/sudoers.d/velez
+    owner: root
+    group: root 
+    mode: 0440
+

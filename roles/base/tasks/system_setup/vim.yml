@@ -1,0 +1,9 @@
+- name: system setup | vim | copy .vimrc
+  tags: vim,system,settings
+  copy:
+    src: system_setup/vimrc
+    dest: /home/velez/.vim/vimrc
+    owner: velez
+    group: velez
+    mode: 0644
+
