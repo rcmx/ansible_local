@@ -3,7 +3,7 @@
 
 - block:
   # install users
-  - import_tasks: users/ansible.yml
+  - import_tasks: users/users.yml
 
   # install software
   - import_tasks: software/packages_utilities.yml

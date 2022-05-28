@@ -1,0 +1,29 @@
+---
+- name: create users xxxx
+  block:
+  - name: create users | ansible user
+    user:
+      name: ansible
+      groups: sudo
+      append: yes
+      state: present
+
+  - name: create users | add ansible ssh key
+    authorized_key:
+      user: ansible
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExkp/21VsASdw1ujck9XolFvfNGqqqUqbXHpM0RNbJo ansible deploy"    
+
+
+      #  block:
+  - name: create users | velez user
+    user:
+      name: velez
+      groups: sudo
+      append: yes
+      state: present
+
+  - name: create users | add velez ssh key
+    authorized_key:
+      user: velez
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOH+GDuX+7RjQhBp5CM0vJRH6s91BrYvm4boNyt6MTPr"
+
