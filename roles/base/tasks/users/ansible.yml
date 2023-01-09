@@ -4,6 +4,7 @@
   user:
     name: ansible
     system: yes
+    uid: 999
     groups: sudo
     append: yes
     state: present
