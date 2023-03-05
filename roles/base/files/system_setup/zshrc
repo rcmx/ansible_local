@@ -25,7 +25,13 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-## alias
+###
+bindkey  "^[[1~"   beginning-of-line
+bindkey  "^[[4~"   end-of-line
+bindkey  "^[[3~"  delete-char
+
+
+### alias
 alias la='ls -a'
 alias ll='ls -l'
 
@@ -37,5 +43,8 @@ alias gd='git diff -w'
 alias gl="git log --graph --pretty=format:'%Cred%h%Creset -%s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 alias glol='git log --graph --abbrev-commit --oneline --decorate'
 
-PROMPT="%n@%m:%~$ "
+### nvm
+export NVM_DIR="$HOME/.nvm"
+source "$NVM_DIR/nvm.sh"
 
+PROMPT="%n@%m:%~$ "
