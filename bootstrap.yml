@@ -1,0 +1,59 @@
+---
+# Bootstrap playbook - run once as initial user to create ansible user
+- hosts: localhost
+  connection: local
+  gather_facts: true
+
+  pre_tasks:
+    - name: update repositories (Ubuntu/Debian)
+      tags: always
+      become: true
+      apt: update_cache=yes
+      changed_when: False
+      when: ansible_os_family == "Debian"
+
+    - name: update repositories (Fedora/RHEL)
+      tags: always
+      become: true
+      dnf:
+        update_cache: yes
+      changed_when: False
+      when: ansible_os_family == "RedHat"
+
+  tasks:
+    - name: users | check if ansible user exists
+      tags: users,system
+      shell: getent passwd ansible
+      register: ansible_user_exists  
+      failed_when: false
+      changed_when: false
+
+    - name: users | create ansible user
+      tags: users,system
+      become: true
+      user:
+        name: ansible
+        system: yes
+        groups: "{{ 'sudo' if ansible_os_family == 'Debian' else 'wheel' }}"
+        append: yes
+        state: present
+        create_home: yes
+      when: ansible_user_exists.rc != 0
+
+    - name: users | add ansible ssh key
+      tags: users,system
+      become: true
+      authorized_key:
+        user: ansible
+        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExkp/21VsASdw1ujck9XolFvfNGqqqUqbXHpM0RNbJo ansible manage"
+        manage_dir: yes
+
+    - name: users | copy sudoers_ansible
+      tags: users,system
+      become: true
+      copy:
+        src: roles/core/files/users/sudoers_ansible
+        dest: /etc/sudoers.d/ansible
+        owner: root
+        group: root
+        mode: 0440
