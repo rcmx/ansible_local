@@ -1,4 +1,4 @@
-# tasks to complete before running roles
+# Development system setup playbook
 - hosts: localhost
   connection: local
   become: true
@@ -18,5 +18,4 @@
       when: ansible_os_family == "RedHat"
 
   roles:
-    - core
-
+    - dev

@@ -1,0 +1,37 @@
+---
+- name: Install cron packages (Fedora/RHEL)
+  tags: system,packages
+  package:
+    name:
+      - cronie
+      - crontabs
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: Install cron package (Debian/Ubuntu)
+  tags: system,packages
+  package:
+    name: cron
+    state: present
+  when: ansible_os_family == "Debian"
+
+- name: Set cron service name fact
+  tags: system
+  set_fact:
+    cron_service: "{{ 'crond' if ansible_os_family == 'RedHat' else 'cron' }}"
+
+- name: Start and enable cron service
+  tags: system
+  systemd:
+    name: "{{ cron_service }}"
+    state: started
+    enabled: yes
+
+- name: Install cron job for ansible-pull automation
+  tags: system,automation
+  cron:
+    user: ansible
+    name: "ansible provision"
+    minute: "*/10"
+    job: "ansible-pull -o -U https://github.com/rcmx/ansible_local.git core.yml"
+

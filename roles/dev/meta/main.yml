@@ -1,0 +1,34 @@
+---
+galaxy_info:
+  author: velez
+  description: Development tools and configuration for workstation setup
+  company: Personal
+  license: MIT
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - focal
+        - jammy
+    - name: Debian
+      versions:
+        - bullseye
+        - bookworm
+    - name: Fedora
+      versions:
+        - 36
+        - 37
+        - 38
+    - name: EL
+      versions:
+        - 8
+        - 9
+  galaxy_tags:
+    - development
+    - nodejs
+    - dotnet
+    - docker
+    - tools
+
+dependencies:
+  - role: core

@@ -1,0 +1,87 @@
+---
+- name: software | docker | install docker (Ubuntu/Debian)
+  block:
+    - name: software | docker | install prerequisites
+      tags: packages,dev,docker
+      package:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: software | docker | add Docker GPG key
+      tags: packages,dev,docker
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: software | docker | add Docker repository
+      tags: packages,dev,docker
+      apt_repository:
+        repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: software | docker | install Docker
+      tags: packages,dev,docker
+      package:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: latest
+
+    - name: software | docker | start and enable Docker service
+      tags: system,dev,docker
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+  when: ansible_os_family == "Debian"
+
+- name: software | docker | install docker (Fedora/RHEL)
+  block:
+    - name: software | docker | add Docker repository
+      tags: packages,dev,docker
+      yum_repository:
+        name: docker-ce-stable
+        description: Docker CE Stable - $basearch
+        baseurl: https://download.docker.com/linux/fedora/$releasever/$basearch/stable
+        gpgcheck: yes
+        gpgkey: https://download.docker.com/linux/fedora/gpg
+        enabled: yes
+
+    - name: software | docker | install Docker
+      tags: packages,dev,docker
+      package:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: latest
+
+    - name: software | docker | start and enable Docker service  
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+  when: ansible_os_family == "RedHat"
+
+- name: software | docker | create docker group
+  tags: users,dev,docker
+  group:
+    name: docker
+    state: present
+
+- name: software | docker | add velez user to docker group
+  tags: users,dev,docker
+  user:
+    name: velez
+    groups: docker
+    append: yes

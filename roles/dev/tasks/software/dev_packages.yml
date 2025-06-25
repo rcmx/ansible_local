@@ -1,0 +1,20 @@
+---
+- name: software | dev | install development packages (Ubuntu/Debian)
+  tags: packages,dev,settings
+  package:
+    state: latest
+    name:
+      - neovim
+      - curl
+      - build-essential
+  when: ansible_os_family == "Debian"
+
+- name: software | dev | install development packages (Fedora/RHEL)
+  tags: packages,dev,settings
+  package:
+    state: latest
+    name:
+      - neovim
+      - curl
+      - "@development-tools"
+  when: ansible_os_family == "RedHat"

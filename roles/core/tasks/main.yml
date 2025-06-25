@@ -1,15 +1,12 @@
-#- debug:
-#    msg: "base role - i am herer"
-
 - block:
   # install users
   - import_tasks: users/ansible.yml
   - import_tasks: users/velez.yml
 
 - block:
-  # install software
+  # install core software
   - import_tasks: software/packages_utilities.yml
+  - import_tasks: software/lazygit.yml
 
-  # configure software
-  - import_tasks: system_setup/cron.yml
-
+  # configure system
+  - import_tasks: system_setup/automation.yml

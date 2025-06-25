@@ -1,17 +1,19 @@
-# tasks to complete before running roles
+# Core system setup playbook for general use
 - hosts: localhost
   connection: local
-  become: true
+  gather_facts: true
 
   pre_tasks:
     - name: update repositories (Ubuntu/Debian)
       tags: always
+      become: true
       apt: update_cache=yes
       changed_when: False
       when: ansible_os_family == "Debian"
 
     - name: update repositories (Fedora/RHEL)
       tags: always
+      become: true
       dnf:
         update_cache: yes
       changed_when: False
@@ -19,4 +21,3 @@
 
   roles:
     - core
-

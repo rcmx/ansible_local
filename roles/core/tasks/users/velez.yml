@@ -1,15 +1,28 @@
+- name: users | check if velez user exists
+  tags: users,system
+  shell: getent passwd velez
+  register: velez_user_exists
+  failed_when: false
+  changed_when: false
+
 - name: users | create velez user
+  tags: users,system
   user:
     name: velez
-    groups: adm,ansible,sudo
+    groups: "adm,ansible,{{ 'sudo' if ansible_os_family == 'Debian' else 'wheel' }}"
     append: yes
     state: present
     shell: /bin/zsh
+    create_home: yes
+  when: velez_user_exists.rc != 0
 
 - name: users | ssh | add velez ssh key
+  tags: users,system
   authorized_key:
     user: velez
     key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOH+GDuX+7RjQhBp5CM0vJRH6s91BrYvm4boNyt6MTPr velez identity"
+    manage_dir: yes
+  when: velez_user_exists.rc != 0
 
 #- name: users | sudo | copy sudoers_velez
 #  copy:
@@ -21,6 +34,7 @@
 
 # configure software
 - name: users | tmux | copy tmux.conf
+  tags: settings,dotfiles
   copy:
     src: system_setup/tmux.conf
     dest: /home/velez/.tmux.conf
@@ -30,14 +44,16 @@
 
 
 - name: users | vim | copy .vimrc
+  tags: settings,dotfiles
   copy:
     src: system_setup/vimrc
-    dest: /home/velez/.vim/
+    dest: /home/velez/.vimrc
     owner: velez
     group: velez
     mode: 0644
 
 - name: users | zsh | copy .zshrc
+  tags: settings,dotfiles,zsh
   copy:
     src: system_setup/zshrc
     dest: /home/velez/.zshrc

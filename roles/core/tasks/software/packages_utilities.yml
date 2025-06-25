@@ -1,0 +1,50 @@
+- block:
+  - name: system setup | utilities | add universe repository
+    tags: packages,system
+    apt_repository:
+      repo: "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} universe"
+      state: present
+#  - name: system setup | utilities | add powerline
+#   package:
+#     state: present
+#     name:
+#     - powerline
+#     - fonts-powerline
+  when: ansible_distribution == 'Ubuntu'
+
+- name: system setup | utilities | install utility packages (Ubuntu/Debian)
+  tags: packages,system,settings
+  package:
+    state: latest
+    name:
+      - htop
+      - mc
+      - tmux
+      - wget
+      - zsh
+      - git
+      - luarocks
+      - ripgrep
+      - gcc
+      - build-essential
+      - fzf
+  when: ansible_os_family == "Debian"
+
+- name: system setup | utilities | install utility packages (Fedora/RHEL)
+  tags: packages,system,settings
+  package:
+    state: latest
+    name:
+      - htop
+      - mc
+      - tmux
+      - wget
+      - zsh
+      - git
+      - luarocks
+      - ripgrep
+      - gcc
+      - "@development-tools"
+      - fzf
+  when: ansible_os_family == "RedHat"
+

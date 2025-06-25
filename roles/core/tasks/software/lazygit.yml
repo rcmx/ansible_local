@@ -1,0 +1,30 @@
+---
+- name: software | lazygit | install lazygit (Ubuntu/Debian)
+  block:
+    - name: software | lazygit | add lazygit PPA
+      tags: packages,software
+      apt_repository:
+        repo: ppa:lazygit-team/release
+        state: present
+
+    - name: software | lazygit | install lazygit
+      tags: packages,software
+      package:
+        name: lazygit
+        state: latest
+  when: ansible_os_family == "Debian"
+
+- name: software | lazygit | install lazygit (Fedora/RHEL)
+  block:
+    - name: software | lazygit | add COPR repository
+      tags: packages,software
+      shell: dnf copr enable atim/lazygit -y
+      args:
+        creates: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:atim:lazygit.repo
+
+    - name: software | lazygit | install lazygit
+      tags: packages,software
+      package:
+        name: lazygit
+        state: latest
+  when: ansible_os_family == "RedHat"

@@ -1,0 +1,44 @@
+---
+- name: software | dotnet | install dotnet SDK (Ubuntu/Debian)
+  block:
+    - name: software | dotnet | add Microsoft GPG key
+      tags: packages,dev,dotnet
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+
+    - name: software | dotnet | add Microsoft repository
+      tags: packages,dev,dotnet
+      apt_repository:
+        repo: "deb https://packages.microsoft.com/repos/microsoft-ubuntu-{{ ansible_distribution_release }}-prod {{ ansible_distribution_release }} main"
+        state: present
+
+    - name: software | dotnet | install dotnet SDK
+      tags: packages,dev,dotnet
+      package:
+        name: 
+          - dotnet-sdk-8.0
+          - dotnet-sdk-9.0
+        state: latest
+  when: ansible_os_family == "Debian"
+
+- name: software | dotnet | install dotnet SDK (Fedora/RHEL)
+  block:
+    - name: software | dotnet | add Microsoft repository
+      tags: packages,dev,dotnet
+      yum_repository:
+        name: packages-microsoft-com-prod
+        description: packages-microsoft-com-prod
+        baseurl: https://packages.microsoft.com/rhel/8/prod/
+        gpgcheck: yes
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+        enabled: yes
+
+    - name: software | dotnet | install dotnet SDK
+      tags: packages,dev,dotnet
+      package:
+        name: 
+          - dotnet-sdk-8.0
+          - dotnet-sdk-9.0
+        state: latest
+  when: ansible_os_family == "RedHat"
