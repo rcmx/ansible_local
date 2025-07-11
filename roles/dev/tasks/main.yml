@@ -4,3 +4,5 @@
   - import_tasks: software/dotnet.yml
   - import_tasks: software/dev_packages.yml
   - import_tasks: software/docker.yml
+  - import_tasks: fonts/installfonts.yml
+
