@@ -61,3 +61,12 @@
     group: velez
     mode: 0644
 
+- name: users | wezterm | copy wezterm.lua
+  tags: settings,dotfiles,wezterm
+  copy:
+    src: system_setup/wezterm.lua
+    dest: /home/velez/.wezterm.lua
+    owner: velez
+    group: velez
+    mode: 0644
+
