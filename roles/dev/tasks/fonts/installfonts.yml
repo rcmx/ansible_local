@@ -1,0 +1,11 @@
+
+
+- name: Download and extract fonts to fonts directory.
+  include_tasks: "download-font.yml"
+  loop: "{{ fonts_to_install }}"
+  loop_control:
+    loop_var: font
+
+- name: Update font cache
+  ansible.builtin.shell: fc-cache -f
+  changed_when: false

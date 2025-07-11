@@ -1,4 +1,4 @@
-# Development system setup playbook
+# development system setup playbook
 - hosts: localhost
   connection: local
   become: true
@@ -16,6 +16,10 @@
         update_cache: yes
       changed_when: False
       when: ansible_os_family == "RedHat"
+
+  vars:
+    fonts_to_install:
+      - Hack
 
   roles:
     - dev
