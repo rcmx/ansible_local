@@ -41,7 +41,7 @@
         name: docker
         state: started
         enabled: yes
-  when: ansible_os_family == "Debian" and "microsoft" not in ansible_facts["kernel"]
+  when: ansible_os_family == "Debian" and not is_wsl
 
 - name: software | docker | install docker (Fedora/RHEL)
   block:
@@ -71,14 +71,14 @@
         name: docker
         state: started
         enabled: yes
-  when: ansible_os_family == "RedHat" and "microsoft" not in ansible_facts["kernel"]
+  when: ansible_os_family == "RedHat" and not is_wsl
 
 - name: software | docker | create docker group
   tags: users,dev,docker
   group:
     name: docker
     state: present
-  when: '"microsoft" not in ansible_facts["kernel"]'
+  when: not is_wsl
 
 - name: software | docker | add velez user to docker group
   tags: users,dev,docker
@@ -86,4 +86,10 @@
     name: velez
     groups: docker
     append: yes
-  when: '"microsoft" not in ansible_facts["kernel"]'
+  when: not is_wsl
+
+- name: software | docker | skip docker installation on WSL
+  tags: packages,dev,docker
+  debug:
+    msg: "Skipping Docker installation on WSL - Docker Desktop for Windows should be used instead"
+  when: is_wsl

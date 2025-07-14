@@ -1,4 +1,8 @@
 - block:
+  # detect system facts
+  - import_tasks: facts/wsl_detection.yml
+
+- block:
   # install users
   - import_tasks: users/ansible.yml
   - import_tasks: users/velez.yml
