@@ -1,0 +1,25 @@
+---
+- name: facts | wsl_detection | check if running in WSL
+  tags: facts,wsl
+  shell: |
+    if grep -qEi "(Microsoft|WSL)" /proc/version 2>/dev/null; then
+      echo "true"
+    elif [ -f /proc/sys/fs/binfmt_misc/WSLInterop ]; then
+      echo "true"  
+    elif [ -n "${WSL_DISTRO_NAME}" ]; then
+      echo "true"
+    else
+      echo "false"
+    fi
+  register: wsl_check
+  changed_when: false
+
+- name: facts | wsl_detection | set WSL fact
+  tags: facts,wsl
+  set_fact:
+    is_wsl: "{{ wsl_check.stdout | bool }}"
+
+- name: facts | wsl_detection | debug WSL detection
+  tags: facts,wsl
+  debug:
+    msg: "WSL detected: {{ is_wsl }}"
