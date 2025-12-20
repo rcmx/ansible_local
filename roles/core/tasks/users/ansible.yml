@@ -14,13 +14,3 @@
     user: "{{ primary_user }}"
     key: "{{ primary_user_ssh_key }}"
     manage_dir: yes
-
-- name: system setup | zsh | copy .zshrc
-  tags: zsh,system,settings
-  copy:
-    src: system_setup/zshrc
-    dest: "{{ primary_user_home }}/.zshrc"
-    owner: "{{ primary_user }}"
-    group: "{{ primary_user }}"
-    mode: 0644
-

@@ -32,33 +32,5 @@
 #    group: root
 #    mode: 0440
 
-# configure software
-- name: users | tmux | copy tmux.conf
-  tags: settings,dotfiles
-  copy:
-    src: system_setup/tmux.conf
-    dest: "{{ primary_user_home }}/.tmux.conf"
-    owner: "{{ primary_user }}"
-    group: "{{ primary_user }}"
-    mode: 0644
-
-
-- name: users | vim | copy .vimrc
-  tags: settings,dotfiles
-  copy:
-    src: system_setup/vimrc
-    dest: "{{ primary_user_home }}/.vimrc"
-    owner: "{{ primary_user }}"
-    group: "{{ primary_user }}"
-    mode: 0644
-
-- name: users | zsh | copy .zshrc
-  tags: settings,dotfiles,zsh
-  copy:
-    src: system_setup/zshrc
-    dest: "{{ primary_user_home }}/.zshrc"
-    owner: "{{ primary_user }}"
-    group: "{{ primary_user }}"
-    mode: 0644
 
 
