@@ -2,41 +2,41 @@
 - name: software | nvm | check if nvm is installed
   tags: dev,nodejs
   stat:
-    path: /home/velez/.nvm/nvm.sh
+    path: "{{ primary_user_home }}/.nvm/nvm.sh"
   register: nvm_installed
 
 - name: software | nvm | download and install nvm
   tags: dev,nodejs
   shell: >
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/{{ nvm_version }}/install.sh | bash
   args:
-    creates: /home/velez/.nvm/nvm.sh
-  become_user: velez
+    creates: "{{ primary_user_home }}/.nvm/nvm.sh"
+  become_user: "{{ primary_user }}"
   when: not nvm_installed.stat.exists
 
 - name: software | nvm | source nvm in .zshrc
   tags: dev,nodejs,zsh
   lineinfile:
-    path: /home/velez/.zshrc
+    path: "{{ primary_user_home }}/.zshrc"
     line: 'export NVM_DIR="$HOME/.nvm"'
     create: yes
-  become_user: velez
+  become_user: "{{ primary_user }}"
 
 - name: software | nvm | add nvm load script to .zshrc
   tags: dev,nodejs,zsh
   lineinfile:
-    path: /home/velez/.zshrc
+    path: "{{ primary_user_home }}/.zshrc"
     line: '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
     create: yes
-  become_user: velez
+  become_user: "{{ primary_user }}"
 
 - name: software | nvm | add nvm bash completion to .zshrc
   tags: dev,nodejs,zsh
   lineinfile:
-    path: /home/velez/.zshrc
+    path: "{{ primary_user_home }}/.zshrc"
     line: '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
     create: yes
-  become_user: velez
+  become_user: "{{ primary_user }}"
 
 - name: software | node | install latest LTS node via nvm
   tags: dev,nodejs
@@ -48,6 +48,6 @@
     nvm alias default lts/*
   args:
     executable: /bin/bash
-  become_user: velez
+  become_user: "{{ primary_user }}"
   register: node_install_result
   changed_when: "'already installed' not in node_install_result.stdout"

@@ -1,28 +1,28 @@
-- name: users | check if velez user exists
+- name: users | check if primary user exists
   tags: users,system
-  shell: getent passwd velez
-  register: velez_user_exists
+  shell: getent passwd {{ primary_user }}
+  register: primary_user_exists
   failed_when: false
   changed_when: false
 
-- name: users | create velez user
+- name: users | create primary user
   tags: users,system
   user:
-    name: velez
-    groups: "adm,ansible,{{ 'sudo' if ansible_os_family == 'Debian' else 'wheel' }}"
+    name: "{{ primary_user }}"
+    groups: "adm,ansible,{{ 'sudo' if ansible_facts['os_family'] == 'Debian' else 'wheel' }}"
     append: yes
     state: present
     shell: /bin/zsh
     create_home: yes
-  when: velez_user_exists.rc != 0
+  when: primary_user_exists.rc != 0
 
-- name: users | ssh | add velez ssh key
+- name: users | ssh | add primary user ssh key
   tags: users,system
   authorized_key:
-    user: velez
-    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOH+GDuX+7RjQhBp5CM0vJRH6s91BrYvm4boNyt6MTPr velez identity"
+    user: "{{ primary_user }}"
+    key: "{{ primary_user_ssh_key }}"
     manage_dir: yes
-  when: velez_user_exists.rc != 0
+  when: primary_user_exists.rc != 0
 
 #- name: users | sudo | copy sudoers_velez
 #  copy:
@@ -37,9 +37,9 @@
   tags: settings,dotfiles
   copy:
     src: system_setup/tmux.conf
-    dest: /home/velez/.tmux.conf
-    owner: velez
-    group: velez
+    dest: "{{ primary_user_home }}/.tmux.conf"
+    owner: "{{ primary_user }}"
+    group: "{{ primary_user }}"
     mode: 0644
 
 
@@ -47,26 +47,26 @@
   tags: settings,dotfiles
   copy:
     src: system_setup/vimrc
-    dest: /home/velez/.vimrc
-    owner: velez
-    group: velez
+    dest: "{{ primary_user_home }}/.vimrc"
+    owner: "{{ primary_user }}"
+    group: "{{ primary_user }}"
     mode: 0644
 
 - name: users | zsh | copy .zshrc
   tags: settings,dotfiles,zsh
   copy:
     src: system_setup/zshrc
-    dest: /home/velez/.zshrc
-    owner: velez
-    group: velez
+    dest: "{{ primary_user_home }}/.zshrc"
+    owner: "{{ primary_user }}"
+    group: "{{ primary_user }}"
     mode: 0644
 
 - name: users | wezterm | copy wezterm.lua
   tags: settings,dotfiles,wezterm
   copy:
     src: system_setup/wezterm.lua
-    dest: /home/velez/.wezterm.lua
-    owner: velez
-    group: velez
+    dest: "{{ primary_user_home }}/.wezterm.lua"
+    owner: "{{ primary_user }}"
+    group: "{{ primary_user }}"
     mode: 0644
 

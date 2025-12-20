@@ -27,7 +27,7 @@
       state: latest
       name:
         - wezterm
-  when: ansible_os_family == "Debian" and not is_wsl
+  when: ansible_facts["os_family"] == "Debian" and not is_wsl
 
 - block:
   - name: system setup | wezterm | install wezterm via RPM (Fedora/RHEL)
@@ -36,7 +36,15 @@
       name: https://github.com/wezterm/wezterm/releases/download/20240203-110809-5046fc22/wezterm-20240203_110809_5046fc22-1.fedora39.x86_64.rpm
       state: present
       disable_gpg_check: yes
-  when: ansible_os_family == "RedHat" and not is_wsl
+  when: ansible_facts["os_family"] == "RedHat" and not is_wsl
+
+- block:
+  - name: system setup | wezterm | install wezterm (Arch Linux)
+    tags: packages,system,wezterm
+    community.general.pacman:
+      name: wezterm
+      state: latest
+  when: ansible_facts["os_family"] == "Archlinux" and not is_wsl
 
 - name: system setup | wezterm | skip wezterm installation on WSL
   tags: packages,system,wezterm

@@ -6,19 +6,26 @@
       - cronie
       - crontabs
     state: present
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts["os_family"] == "RedHat"
 
 - name: Install cron package (Debian/Ubuntu)
   tags: system,packages
   package:
     name: cron
     state: present
-  when: ansible_os_family == "Debian"
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: Install cron package (Arch Linux)
+  tags: system,packages
+  community.general.pacman:
+    name: cronie
+    state: present
+  when: ansible_facts["os_family"] == "Archlinux"
 
 - name: Set cron service name fact
   tags: system
   set_fact:
-    cron_service: "{{ 'crond' if ansible_os_family == 'RedHat' else 'cron' }}"
+    cron_service: "{{ 'crond' if ansible_facts['os_family'] in ['RedHat', 'Archlinux'] else 'cron' }}"
 
 - name: Start and enable cron service
   tags: system

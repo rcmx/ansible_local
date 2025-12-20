@@ -1,6 +1,31 @@
 # ansible_local
 Ansible playbooks for workstation configuration and management using ansible-pull automation.
 
+## Prerequisites
+
+Before running the playbooks, you need to install Ansible and Git on your system.
+
+### Ubuntu/Debian
+```bash
+sudo apt-get update
+sudo apt-get install -y ansible git
+```
+
+### Fedora/RHEL
+```bash
+sudo dnf install -y ansible git
+```
+
+### Arch Linux
+```bash
+sudo pacman -S ansible git
+```
+
+Verify installation:
+```bash
+ansible --version
+```
+
 ## Bootstrap Setup (First Time Only)
 
 Before running any playbooks, you must bootstrap the system to create the `ansible` user:

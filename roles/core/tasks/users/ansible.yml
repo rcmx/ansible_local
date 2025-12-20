@@ -1,26 +1,26 @@
 ---
 
-- name: users | create velez user
+- name: users | create primary user
   tags: users,system
   user:
-    name: velez
-    groups: "{{ 'sudo' if ansible_os_family == 'Debian' else 'wheel' }}"
+    name: "{{ primary_user }}"
+    groups: "{{ 'sudo' if ansible_facts['os_family'] == 'Debian' else 'wheel' }}"
     append: yes
     state: present
 
-- name: users | add velez ssh key
+- name: users | add primary user ssh key
   tags: users,system
   authorized_key:
-    user: velez
-    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOH+GDuX+7RjQhBp5CM0vJRH6s91BrYvm4boNyt6MTPr velez identity"
+    user: "{{ primary_user }}"
+    key: "{{ primary_user_ssh_key }}"
     manage_dir: yes
 
 - name: system setup | zsh | copy .zshrc
   tags: zsh,system,settings
   copy:
     src: system_setup/zshrc
-    dest: /home/velez/.zshrc
-    owner: velez
-    group: velez
+    dest: "{{ primary_user_home }}/.zshrc"
+    owner: "{{ primary_user }}"
+    group: "{{ primary_user }}"
     mode: 0644
 

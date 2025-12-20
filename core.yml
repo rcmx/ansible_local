@@ -9,7 +9,7 @@
       become: true
       apt: update_cache=yes
       changed_when: False
-      when: ansible_os_family == "Debian"
+      when: ansible_facts["os_family"] == "Debian"
 
     - name: update repositories (Fedora/RHEL)
       tags: always
@@ -17,7 +17,15 @@
       dnf:
         update_cache: yes
       changed_when: False
-      when: ansible_os_family == "RedHat"
+      when: ansible_facts["os_family"] == "RedHat"
+
+    - name: update repositories (Arch Linux)
+      tags: always
+      become: true
+      community.general.pacman:
+        update_cache: yes
+      changed_when: False
+      when: ansible_facts["os_family"] == "Archlinux"
 
   roles:
     - core

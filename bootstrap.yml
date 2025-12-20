@@ -3,6 +3,8 @@
 - hosts: localhost
   connection: local
   gather_facts: true
+  vars_files:
+    - roles/core/defaults/main.yml
 
   pre_tasks:
     - name: update repositories (Ubuntu/Debian)
@@ -10,7 +12,7 @@
       become: true
       apt: update_cache=yes
       changed_when: False
-      when: ansible_os_family == "Debian"
+      when: ansible_facts["os_family"] == "Debian"
 
     - name: update repositories (Fedora/RHEL)
       tags: always
@@ -18,7 +20,15 @@
       dnf:
         update_cache: yes
       changed_when: False
-      when: ansible_os_family == "RedHat"
+      when: ansible_facts["os_family"] == "RedHat"
+
+    - name: update repositories (Arch Linux)
+      tags: always
+      become: true
+      community.general.pacman:
+        update_cache: yes
+      changed_when: False
+      when: ansible_facts["os_family"] == "Archlinux"
 
   tasks:
     - name: users | check if ansible user exists
@@ -34,18 +44,18 @@
       user:
         name: ansible
         system: yes
-        groups: "{{ 'sudo' if ansible_os_family == 'Debian' else 'wheel' }}"
+        groups: "{{ 'sudo' if ansible_facts['os_family'] == 'Debian' else 'wheel' }}"
         append: yes
         state: present
         create_home: yes
       when: ansible_user_exists.rc != 0
 
-    - name: users | add ansible ssh key
+    - name: users | add primary user ssh key
       tags: users,system
       become: true
       authorized_key:
-        user: ansible
-        key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExkp/21VsASdw1ujck9XolFvfNGqqqUqbXHpM0RNbJo ansible manage"
+        user: "{{ primary_user }}"
+        key: "{{ primary_user_ssh_key }}"
         manage_dir: yes
 
     - name: users | copy sudoers_ansible

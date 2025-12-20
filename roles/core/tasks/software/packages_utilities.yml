@@ -9,7 +9,7 @@
 - name: system setup | utilities | install utility packages (Ubuntu/Debian)
   tags: packages,system,settings
   package:
-    state: latest
+    state: present
     name:
       - htop
       - mc
@@ -22,12 +22,12 @@
       - gcc
       - build-essential
       - fzf
-  when: ansible_os_family == "Debian"
+  when: ansible_facts["os_family"] == "Debian"
 
 - name: system setup | utilities | install utility packages (Fedora/RHEL)
   tags: packages,system,settings
   package:
-    state: latest
+    state: present
     name:
       - htop
       - mc
@@ -40,5 +40,23 @@
       - gcc
       - "@development-tools"
       - fzf
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts["os_family"] == "RedHat"
+
+- name: system setup | utilities | install utility packages (Arch Linux)
+  tags: packages,system,settings
+  community.general.pacman:
+    state: present
+    name:
+      - htop
+      - mc
+      - tmux
+      - wget
+      - zsh
+      - git
+      - luarocks
+      - ripgrep
+      - gcc
+      - base-devel
+      - fzf
+  when: ansible_facts["os_family"] == "Archlinux"
 

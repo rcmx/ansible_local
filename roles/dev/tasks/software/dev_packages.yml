@@ -2,19 +2,29 @@
 - name: software | dev | install development packages (Ubuntu/Debian)
   tags: packages,dev,settings
   package:
-    state: latest
+    state: present
     name:
       - neovim
       - curl
       - build-essential
-  when: ansible_os_family == "Debian"
+  when: ansible_facts["os_family"] == "Debian"
 
 - name: software | dev | install development packages (Fedora/RHEL)
   tags: packages,dev,settings
   package:
-    state: latest
+    state: present
     name:
       - neovim
       - curl
       - "@development-tools"
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts["os_family"] == "RedHat"
+
+- name: software | dev | install development packages (Arch Linux)
+  tags: packages,dev,settings
+  community.general.pacman:
+    state: present
+    name:
+      - neovim
+      - curl
+      - base-devel
+  when: ansible_facts["os_family"] == "Archlinux"

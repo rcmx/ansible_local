@@ -1,0 +1,17 @@
+---
+# Development role handlers for service management
+#
+# Handlers are triggered by tasks using the notify directive.
+# They only run if the task that notified them reported a change.
+# This ensures services are only restarted when necessary, reducing downtime.
+
+- name: Restart docker service
+  tags: system,docker
+  systemd:
+    name: docker
+    state: restarted
+  listen: "restart docker"
+  # Triggered when: Docker daemon configuration files are modified
+  # Used by: docker.yml tasks that modify daemon.json or other config files
+  # Note: In WSL, this handler is skipped (Docker Desktop for Windows should be used)
+  # Example use: notify this handler after copying docker daemon.json to trigger reload

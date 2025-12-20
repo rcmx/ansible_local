@@ -1,0 +1,28 @@
+---
+# Development environment configuration
+
+# NVM (Node Version Manager) version
+# Version to download and install for node.js management
+nvm_version: "v0.39.0"
+
+# Fonts to install
+# Nerd fonts to download and install system-wide
+fonts_to_install:
+  - Hack
+
+# Development packages configuration
+# Different package names for different operating systems
+dev_packages_debian:
+  - neovim
+  - curl
+  - build-essential
+
+dev_packages_rhel:
+  - neovim
+  - curl
+  - "@development-tools"
+
+dev_packages_arch:
+  - neovim
+  - curl
+  - base-devel

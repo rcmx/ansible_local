@@ -16,11 +16,11 @@
     - name: software | dotnet | install dotnet SDK
       tags: packages,dev,dotnet
       package:
-        name: 
+        name:
           - dotnet-sdk-8.0
           - dotnet-sdk-9.0
-        state: latest
-  when: ansible_os_family == "Debian"
+        state: present
+  when: ansible_facts["os_family"] == "Debian"
 
 - name: software | dotnet | install dotnet SDK (Fedora/RHEL)
   block:
@@ -37,8 +37,18 @@
     - name: software | dotnet | install dotnet SDK
       tags: packages,dev,dotnet
       package:
-        name: 
+        name:
           - dotnet-sdk-8.0
           - dotnet-sdk-9.0
-        state: latest
-  when: ansible_os_family == "RedHat"
+        state: present
+  when: ansible_facts["os_family"] == "RedHat"
+
+- name: software | dotnet | install dotnet SDK (Arch Linux)
+  block:
+    - name: software | dotnet | install dotnet SDK
+      tags: packages,dev,dotnet
+      community.general.pacman:
+        name:
+          - dotnet-sdk
+        state: present
+  when: ansible_facts["os_family"] == "Archlinux"
