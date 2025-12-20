@@ -4,13 +4,9 @@
 
 - block:
   # install users
-  - import_tasks: users/ansible.yml
-  - import_tasks: users/velez.yml
+  - import_tasks: users.yml
 
 - block:
   # install core software
   - import_tasks: software/packages_utilities.yml
-
-  # configure system
-  - import_tasks: system_setup/automation.yml
   become: true

@@ -15,9 +15,8 @@ The dev role extends the core role with comprehensive development tools. It incl
 
 ## Dependencies
 
-- **Requires:** `basic` role (automatically included as a dependency)
-- `setup/bootstrap.yml` is automatically imported by `basic.yml` to create the `ansible` system user
-- Requires sudo/root access for package installation and service management
+- Run after the `ansible` and `velez` roles in the same play to ensure base system setup and primary user configuration are in place.
+- Requires sudo/root access for package installation and service management.
 
 ## Role Variables
 
@@ -254,7 +253,7 @@ The following components are **skipped** in WSL:
 
 All other development tools are installed normally.
 
-**Detection:** Automatic via `is_wsl` fact from basic role
+**Detection:** Automatic via `is_wsl` fact from ansible role
 
 ### Ubuntu/Debian
 
@@ -287,7 +286,7 @@ After running this role, the primary user (default: `velez`) has:
 **Note:** After adding the primary user to the `docker` group, they may need to log out and back in for group membership to take effect.
 
 **Customization:**
-The primary user is configurable via the `primary_user` variable (inherited from the basic role):
+The primary user is configurable via the `primary_user` variable (inherited from the velez role):
 ```yaml
 vars:
   primary_user: "developer"  # Create/configure a different user
@@ -295,13 +294,10 @@ vars:
 
 ## Examples
 
-### Basic Usage
+### Usage
 ```bash
-# Run dev role (includes core automatically)
+# Run dev playbook (includes ansible + velez roles)
 ansible-playbook dev.yml -K
-
-# Run with ansible-pull
-ansible-pull -o -K -U https://github.com/rcmx/ansible_local.git dev.yml
 ```
 
 ### Customize Installed Fonts
@@ -431,26 +427,16 @@ pacman -Q | grep dotnet
 
 4. Restart terminal application
 
-## Integration with Basic Role
+## Integration with Playbooks
 
-This role has a declared dependency on the `basic` role:
+The top-level playbooks run roles in this order:
 
-```yaml
-# In roles/dev/meta/main.yml
-dependencies:
-  - role: basic
-```
-
-This means when `dev.yml` is run:
-1. The `basic` role runs first (which includes bootstrap)
-2. Its tasks complete
-3. Then `dev` role tasks execute
-
-**Result:** Both basic system setup and development tools are configured in proper order.
+- `ansible.yml`: `ansible`
+- `velez.yml`: `ansible`, `velez`
+- `dev.yml`: `ansible`, `velez`, `dev`
 
 ## See Also
 
-- `basic.yml` - Basic system setup role (runs automatically before this role)
-- `setup/bootstrap.yml` - Initial bootstrap playbook (imported automatically by basic.yml)
-- `CLAUDE.md` - Project architecture and common commands
+- `ansible.yml` - Ansible system user + core system configuration
+- `velez.yml` - Primary user configuration
 - `README.md` - Main project documentation

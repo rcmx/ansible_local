@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: velez
-  description: Development tools and configuration for workstation setup
+  description: Core system setup and utilities for workstation configuration
   company: Personal
   license: MIT
   min_ansible_version: "2.9"
@@ -24,10 +24,9 @@ galaxy_info:
         - 8
         - 9
   galaxy_tags:
-    - development
-    - nodejs
-    - dotnet
-    - docker
-    - tools
+    - system
+    - configuration
+    - workstation
+    - users
 
 dependencies: []

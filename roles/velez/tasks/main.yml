@@ -23,14 +23,3 @@
     key: "{{ primary_user_ssh_key }}"
     manage_dir: yes
   when: primary_user_exists.rc != 0
-
-#- name: users | sudo | copy sudoers_velez
-#  copy:
-#    src: users/sudoers_velez
-#    dest: /etc/sudoers.d/velez
-#    owner: root
-#    group: root
-#    mode: 0440
-
-
-

@@ -1,0 +1,33 @@
+- name: users | check if ansible user exists
+  tags: users,system
+  shell: getent passwd ansible
+  register: ansible_user_exists
+  failed_when: false
+  changed_when: false
+
+- name: users | create ansible user
+  tags: users,system
+  user:
+    name: ansible
+    system: yes
+    groups: "{{ 'sudo' if ansible_facts['os_family'] == 'Debian' else 'wheel' }}"
+    append: yes
+    state: present
+    create_home: yes
+  when: ansible_user_exists.rc != 0
+
+- name: users | add ansible user ssh key
+  tags: users,system
+  authorized_key:
+    user: ansible
+    key: "{{ ansible_ssh_key }}"
+    manage_dir: yes
+
+- name: users | copy sudoers_ansible
+  tags: users,system
+  copy:
+    src: "{{ role_path }}/files/users/sudoers_ansible"
+    dest: /etc/sudoers.d/ansible
+    owner: root
+    group: root
+    mode: 0440

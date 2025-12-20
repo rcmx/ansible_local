@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: velez
-  description: Core system setup for workstation configuration
+  description: Primary user setup for the velez workstation account
   company: Personal
   license: MIT
   min_ansible_version: "2.9"
@@ -24,9 +24,7 @@ galaxy_info:
         - 8
         - 9
   galaxy_tags:
-    - system
-    - configuration
-    - workstation
     - users
+    - workstation
 
 dependencies: []

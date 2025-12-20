@@ -1,0 +1,8 @@
+---
+# Primary user for workstation configuration (non-root interactive user)
+primary_user: velez
+primary_user_home: "/home/{{ primary_user }}"
+
+# Primary user SSH key
+# Override this variable to use a different SSH key for the primary user
+primary_user_ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOH+GDuX+7RjQhBp5CM0vJRH6s91BrYvm4boNyt6MTPr velez identity"

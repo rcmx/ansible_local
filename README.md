@@ -1,5 +1,5 @@
 # ansible_local
-Ansible playbooks for workstation configuration and management using ansible-pull automation.
+Ansible playbooks for workstation configuration and management.
 
 ## Prerequisites
 
@@ -26,6 +26,48 @@ Verify installation:
 ansible --version
 ```
 
+## New Machine Setup
+
+Complete guide for configuring a fresh machine from scratch.
+
+### Minimum Prerequisites
+
+**Only two things are required** before running the playbooks:
+
+```bash
+# Ubuntu/Debian
+sudo apt-get update && sudo apt-get install -y ansible git
+
+# Fedora/RHEL
+sudo dnf install -y ansible git
+
+# Arch Linux
+sudo pacman -S ansible git
+```
+
+### Run Configuration
+
+```bash
+# Clone and run the setup you want
+git clone https://github.com/rcmx/ansible_local.git
+cd ansible_local
+
+# Ansible system user + core system config
+ansible-playbook ansible.yml -K
+
+# Add primary user configuration on top
+ansible-playbook velez.yml -K
+
+# Add development tooling on top
+ansible-playbook dev.yml -K
+```
+
+**That's it!** After running the appropriate playbook, the playbooks handle everything else including:
+- Creating the `ansible` system user for remote management
+- Creating the primary user and SSH access (when using `velez.yml` or `dev.yml`)
+- Installing required packages
+- Configuring system settings
+
 ## Quick Start
 
 ```bash
@@ -33,8 +75,8 @@ ansible --version
 git clone https://github.com/rcmx/ansible_local.git
 cd ansible_local
 
-# Basic system setup (includes bootstrap automatically)
-ansible-playbook basic.yml -K
+# Ansible system user + core system config
+ansible-playbook ansible.yml -K
 ```
 
 ## Available Playbooks
@@ -44,43 +86,35 @@ ansible-playbook basic.yml -K
 ls *.yml
 
 # Current playbooks:
-# - basic.yml          : Basic system setup (includes bootstrap, users, packages, dotfiles)
-# - dev.yml            : Development tools (includes basic + nodejs, docker, dotnet)
-# - setup/bootstrap.yml: Creates ansible user (called automatically by basic.yml)
+# - ansible.yml         : Ansible user + core system configuration
+# - velez.yml           : Primary user configuration (includes ansible role)
+# - dev.yml             : Development tools (includes ansible + velez roles)
 ```
 
 ## Running Playbooks
 
 ### Manual Execution
 ```bash
-# Basic system setup (includes bootstrap)
-ansible-playbook basic.yml -K
+# Ansible system user + core system config
+ansible-playbook ansible.yml -K
 
-# Development setup (includes basic)
+# Primary user setup (includes ansible)
+ansible-playbook velez.yml -K
+
+# Development setup (includes ansible + velez)
 ansible-playbook dev.yml -K
 
 # Test syntax without changes
-ansible-playbook --syntax-check basic.yml
-```
-
-### Automated Execution (ansible-pull)
-```bash
-# Basic setup via ansible-pull
-ansible-pull -o -K -U https://github.com/rcmx/ansible_local.git basic.yml
-
-# Development setup via ansible-pull
-ansible-pull -o -K -U https://github.com/rcmx/ansible_local.git dev.yml
+ansible-playbook --syntax-check ansible.yml
+ansible-playbook --syntax-check velez.yml
+ansible-playbook --syntax-check dev.yml
 ```
 
 ## Architecture
 
-- **basic.yml**: Basic system configuration, users, and essential packages (includes bootstrap automatically)
-- **dev.yml**: Development tools (depends on basic role automatically)
-- **setup/bootstrap.yml**: Creates `ansible` system user (called automatically by basic.yml)
-- **roles/basic/**: Basic system configuration role
+- **ansible.yml**: Ansible system user + core system configuration
+- **velez.yml**: Primary user configuration (includes ansible role)
+- **dev.yml**: Development tools (includes ansible + velez roles)
+- **roles/ansible/**: Core system configuration role
+- **roles/velez/**: Primary user configuration role
 - **roles/dev/**: Development tools and configurations role
-
-The basic role sets up automated ansible-pull via cron every 10 minutes to maintain system configuration.
-
-
-

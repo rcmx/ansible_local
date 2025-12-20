@@ -1,11 +1,9 @@
 ---
-# Import bootstrap tasks first (idempotent, safe to run multiple times)
-- import_playbook: setup/bootstrap.yml
-
-# Basic system setup playbook for general use
+# Ansible system setup playbook for general use
 - hosts: localhost
   connection: local
   gather_facts: true
+  become: true
 
   pre_tasks:
     - name: update repositories (Ubuntu/Debian)
@@ -32,4 +30,4 @@
       when: ansible_facts["os_family"] == "Archlinux"
 
   roles:
-    - basic
+    - ansible
