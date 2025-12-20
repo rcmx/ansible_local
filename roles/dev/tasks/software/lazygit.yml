@@ -1,17 +1,9 @@
 ---
 - name: software | lazygit | install lazygit (Ubuntu/Debian)
-  block:
-    - name: software | lazygit | add lazygit PPA
-      tags: packages,software
-      apt_repository:
-        repo: ppa:lazygit-team/release
-        state: present
-
-    - name: software | lazygit | install lazygit
-      tags: packages,software
-      package:
-        name: lazygit
-        state: latest
+  tags: packages,software
+  package:
+    name: lazygit
+    state: latest
   when: ansible_facts["os_family"] == "Debian"
 
 - name: software | lazygit | install lazygit (Fedora/RHEL)

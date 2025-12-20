@@ -3,6 +3,8 @@
   - import_tasks: software/nvm_node.yml
   - import_tasks: software/dotnet.yml
   - import_tasks: software/dev_packages.yml
+  - import_tasks: software/kitty.yml
+  - import_tasks: software/lazygit.yml
   - import_tasks: software/docker.yml
   - import_tasks: fonts/installfonts.yml
 

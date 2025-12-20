@@ -31,4 +31,4 @@ galaxy_info:
     - tools
 
 dependencies:
-  - role: core
+  - role: basic

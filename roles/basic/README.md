@@ -1,10 +1,10 @@
-# Core Role
+# Basic Role
 
 Base system configuration role for workstation setup. Provides essential system utilities, user management, and automation framework setup.
 
 ## Overview
 
-The core role is the foundation of the system configuration. It must be run first before any other roles. It handles:
+The basic role is the foundation of the system configuration. It handles:
 
 - System fact detection (WSL, OS family detection)
 - User account creation and SSH key provisioning
@@ -16,7 +16,7 @@ The core role is the foundation of the system configuration. It must be run firs
 
 ## Dependencies
 
-- `bootstrap` playbook must be run once first to create the `ansible` system user
+- `setup/bootstrap.yml` playbook is automatically imported by `basic.yml` to create the `ansible` system user
 - Requires sudo/root access for system package installation and user creation
 
 ## Role Variables
@@ -40,7 +40,7 @@ All variables are defined in `defaults/main.yml` and can be overridden at the pl
 **Usage:**
 ```yaml
 # Default usage (creates velez user with default key)
-ansible-playbook core.yml -K
+ansible-playbook basic.yml -K
 
 # To use a different primary user:
 - hosts: localhost
@@ -49,14 +49,14 @@ ansible-playbook core.yml -K
     primary_user_home: "/home/myuser"
     primary_user_ssh_key: "ssh-ed25519 AAAAC3... your-key-here"
   roles:
-    - core
+    - basic
 
 # To keep velez but update the SSH key:
 - hosts: localhost
   vars:
     primary_user_ssh_key: "ssh-ed25519 AAAAC3... new-key-here"
   roles:
-    - core
+    - basic
 ```
 
 ### Cron Service Variables
@@ -137,7 +137,7 @@ The role automatically configures `ansible-pull` via cron to run every 10 minute
 
 ```bash
 # What gets installed
-*/10 * * * * ansible-pull -o -U https://github.com/rcmx/ansible_local.git core.yml
+*/10 * * * * ansible-pull -o -U https://github.com/rcmx/ansible_local.git basic.yml
 
 # Frequency: Every 10 minutes
 # User: ansible (system automation user)
@@ -145,13 +145,13 @@ The role automatically configures `ansible-pull` via cron to run every 10 minute
 # Keeps system in sync with repository configuration
 ```
 
-**To customize the ansible-pull frequency**, modify `roles/core/tasks/system_setup/automation.yml`:
+**To customize the ansible-pull frequency**, modify `roles/basic/tasks/system_setup/automation.yml`:
 ```yaml
 - name: Install cron job for ansible-pull automation
   cron:
     user: ansible
     minute: "*/10"  # Change this value (e.g., "*/30" for every 30 minutes)
-    job: "ansible-pull -o -U https://github.com/rcmx/ansible_local.git core.yml"
+    job: "ansible-pull -o -U https://github.com/rcmx/ansible_local.git basic.yml"
 ```
 
 ## User Accounts Created
@@ -163,7 +163,7 @@ The role automatically configures `ansible-pull` via cron to run every 10 minute
 - SSH key configured
 - Purpose: Automated playbook execution via ansible-pull
 
-**Created by:** `bootstrap.yml` playbook (run once)
+**Created by:** `setup/bootstrap.yml` playbook (imported automatically by `basic.yml`)
 
 ### Primary User (default: `velez`, configurable via `primary_user`)
 - Regular user account
@@ -174,7 +174,7 @@ The role automatically configures `ansible-pull` via cron to run every 10 minute
 - SSH key configured via `primary_user_ssh_key` variable
 - Purpose: Primary interactive user account for workstation
 
-**Created by:** `core.yml` playbook
+**Created by:** `basic.yml` playbook
 
 **Customization:**
 ```yaml
@@ -191,9 +191,9 @@ The role copies dotfiles to the primary user home directory (configurable via `p
 
 | File | Source | Destination | Purpose |
 |------|--------|-------------|---------|
-| `.zshrc` | `roles/core/files/system_setup/zshrc` | `{{ primary_user_home }}/.zshrc` | Zsh shell configuration |
-| `.vimrc` | `roles/core/files/system_setup/vimrc` | `{{ primary_user_home }}/.vimrc` | Vim editor configuration |
-| `.tmux.conf` | `roles/core/files/system_setup/tmux.conf` | `{{ primary_user_home }}/.tmux.conf` | Tmux multiplexer configuration |
+| `.zshrc` | `roles/basic/files/system_setup/zshrc` | `{{ primary_user_home }}/.zshrc` | Zsh shell configuration |
+| `.vimrc` | `roles/basic/files/system_setup/vimrc` | `{{ primary_user_home }}/.vimrc` | Vim editor configuration |
+| `.tmux.conf` | `roles/basic/files/system_setup/tmux.conf` | `{{ primary_user_home }}/.tmux.conf` | Tmux multiplexer configuration |
 
 **Default:** Dotfiles are installed in `/home/velez/` when using the default `primary_user: velez` setting.
 
@@ -203,11 +203,11 @@ The role copies dotfiles to the primary user home directory (configurable via `p
 
 ### Basic Usage
 ```bash
-# Run core role via playbook
-ansible-playbook core.yml -K
+# Run basic role via playbook
+ansible-playbook basic.yml -K
 
-# Run with ansible-pull (after bootstrap)
-ansible-pull -o -K -U https://github.com/rcmx/ansible_local.git core.yml
+# Run with ansible-pull
+ansible-pull -o -K -U https://github.com/rcmx/ansible_local.git basic.yml
 ```
 
 ### Override SSH Keys
@@ -220,25 +220,25 @@ ansible-pull -o -K -U https://github.com/rcmx/ansible_local.git core.yml
     ansible_ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFoo... your-ansible-key"
     velez_ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBar... your-velez-key"
   roles:
-    - core
+    - basic
 ```
 
 ### Skip WezTerm Installation
 The role automatically skips WezTerm in WSL environments. To skip on native systems:
 ```bash
-ansible-playbook core.yml -K --skip-tags wezterm
+ansible-playbook basic.yml -K --skip-tags wezterm
 ```
 
 ### Run Only Specific Tasks
 ```bash
 # Only update packages
-ansible-playbook core.yml -K --tags packages
+ansible-playbook basic.yml -K --tags packages
 
 # Only setup users
-ansible-playbook core.yml -K --tags users
+ansible-playbook basic.yml -K --tags users
 
 # Only configure automation
-ansible-playbook core.yml -K --tags automation
+ansible-playbook basic.yml -K --tags automation
 ```
 
 ## Troubleshooting
@@ -276,6 +276,6 @@ If detection fails, `is_wsl` will be `false` and WSL-only skips won't apply.
 
 ## See Also
 
-- `dev.yml` - Development tools role (depends on this core role)
-- `bootstrap.yml` - Bootstrap playbook to create ansible user
+- `dev.yml` - Development tools role (depends on this basic role)
+- `setup/bootstrap.yml` - Bootstrap playbook to create ansible user (imported automatically)
 - `CLAUDE.md` - Project architecture and common commands

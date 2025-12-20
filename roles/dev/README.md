@@ -15,8 +15,8 @@ The dev role extends the core role with comprehensive development tools. It incl
 
 ## Dependencies
 
-- **Requires:** `core` role (automatically included as a dependency)
-- Must run `bootstrap.yml` first to create the `ansible` system user
+- **Requires:** `basic` role (automatically included as a dependency)
+- `setup/bootstrap.yml` is automatically imported by `basic.yml` to create the `ansible` system user
 - Requires sudo/root access for package installation and service management
 
 ## Role Variables
@@ -106,7 +106,7 @@ Docker is installed with the following plugins:
 - `docker-buildx-plugin` - Advanced build plugin
 - `docker-compose-plugin` - Docker Compose v2
 
-The `velez` user is automatically added to the `docker` group to enable passwordless Docker command execution.
+The primary user (default: `velez`, configurable via `primary_user`) is automatically added to the `docker` group to enable passwordless Docker command execution.
 
 ## Handlers
 
@@ -254,7 +254,7 @@ The following components are **skipped** in WSL:
 
 All other development tools are installed normally.
 
-**Detection:** Automatic via `is_wsl` fact from core role
+**Detection:** Automatic via `is_wsl` fact from basic role
 
 ### Ubuntu/Debian
 
@@ -287,7 +287,7 @@ After running this role, the primary user (default: `velez`) has:
 **Note:** After adding the primary user to the `docker` group, they may need to log out and back in for group membership to take effect.
 
 **Customization:**
-The primary user is configurable via the `primary_user` variable (inherited from the core role):
+The primary user is configurable via the `primary_user` variable (inherited from the basic role):
 ```yaml
 vars:
   primary_user: "developer"  # Create/configure a different user
@@ -431,26 +431,26 @@ pacman -Q | grep dotnet
 
 4. Restart terminal application
 
-## Integration with Core Role
+## Integration with Basic Role
 
-This role has a declared dependency on the `core` role:
+This role has a declared dependency on the `basic` role:
 
 ```yaml
 # In roles/dev/meta/main.yml
 dependencies:
-  - role: core
+  - role: basic
 ```
 
 This means when `dev.yml` is run:
-1. The `core` role runs first
+1. The `basic` role runs first (which includes bootstrap)
 2. Its tasks complete
 3. Then `dev` role tasks execute
 
-**Result:** Both core system setup and development tools are configured in proper order.
+**Result:** Both basic system setup and development tools are configured in proper order.
 
 ## See Also
 
-- `core.yml` - Core system setup role (runs automatically before this role)
-- `bootstrap.yml` - Initial bootstrap playbook
+- `basic.yml` - Basic system setup role (runs automatically before this role)
+- `setup/bootstrap.yml` - Initial bootstrap playbook (imported automatically by basic.yml)
 - `CLAUDE.md` - Project architecture and common commands
 - `README.md` - Main project documentation

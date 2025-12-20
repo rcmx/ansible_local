@@ -40,5 +40,5 @@
     user: ansible
     name: "ansible provision"
     minute: "*/10"
-    job: "ansible-pull -o -U https://github.com/rcmx/ansible_local.git core.yml"
+    job: "ansible-pull -o -U https://github.com/rcmx/ansible_local.git basic.yml"
 

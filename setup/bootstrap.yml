@@ -4,7 +4,7 @@
   connection: local
   gather_facts: true
   vars_files:
-    - roles/core/defaults/main.yml
+    - ../roles/basic/defaults/main.yml
 
   pre_tasks:
     - name: update repositories (Ubuntu/Debian)
@@ -50,6 +50,14 @@
         create_home: yes
       when: ansible_user_exists.rc != 0
 
+    - name: users | add ansible user ssh key
+      tags: users,system
+      become: true
+      authorized_key:
+        user: ansible
+        key: "{{ ansible_ssh_key }}"
+        manage_dir: yes
+
     - name: users | add primary user ssh key
       tags: users,system
       become: true
@@ -62,7 +70,7 @@
       tags: users,system
       become: true
       copy:
-        src: roles/core/files/users/sudoers_ansible
+        src: "{{ playbook_dir }}/../roles/basic/files/users/sudoers_ansible"
         dest: /etc/sudoers.d/ansible
         owner: root
         group: root
