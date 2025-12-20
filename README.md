@@ -49,7 +49,6 @@ ls *.yml
 # - bootstrap.yml  : Creates ansible user (run once)
 # - core.yml       : Basic system setup (users, packages, dotfiles)
 # - dev.yml        : Development tools (includes core + nodejs, docker, dotnet)
-# - local.yml      : Legacy playbook (deprecated, use core.yml)
 ```
 
 ## Running Playbooks
