@@ -17,8 +17,7 @@
       tags: packages,dev,dotnet
       package:
         name:
-          - dotnet-sdk-8.0
-          - dotnet-sdk-9.0
+          - dotnet-sdk-10.0
         state: present
   when: ansible_facts["os_family"] == "Debian"
 
@@ -38,8 +37,7 @@
       tags: packages,dev,dotnet
       package:
         name:
-          - dotnet-sdk-8.0
-          - dotnet-sdk-9.0
+          - dotnet-sdk-10.0
         state: present
   when: ansible_facts["os_family"] == "RedHat"
 

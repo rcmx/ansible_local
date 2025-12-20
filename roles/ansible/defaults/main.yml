@@ -1,3 +1,5 @@
 ---
 # SSH key for the ansible system user (remote management)
 ansible_ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExkp/21VsASdw1ujck9XolFvfNGqqqUqbXHpM0RNbJo ansible manage"
+ansible_ssh_server_package: "{{ 'openssh' if ansible_facts['os_family'] == 'Archlinux' else 'openssh-server' }}"
+ansible_ssh_service_name: "{{ 'ssh' if ansible_facts['os_family'] == 'Debian' else 'sshd' }}"

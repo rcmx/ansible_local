@@ -8,6 +8,7 @@ The ansible role handles:
 
 - System fact detection (WSL, OS family detection)
 - Essential package installation
+- SSH server installation and enablement for remote access
 
 ## Dependencies
 
@@ -23,6 +24,13 @@ All variables are defined in `defaults/main.yml` and can be overridden at the pl
 |----------|---------|-------------|
 | `ansible_ssh_key` | Ed25519 key (manage key) | SSH public key for the `ansible` system user used for remote management. |
 
+### SSH Server Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `ansible_ssh_server_package` | `openssh` (Arch) / `openssh-server` (others) | SSH server package name to install. |
+| `ansible_ssh_service_name` | `ssh` (Debian) / `sshd` (others) | SSH service name to enable and start. |
+
 ## Task Organization
 
 ```
@@ -30,6 +38,7 @@ tasks/
 ├── main.yml                   # Main entry point with task blocks
 ├── facts/
 │   └── wsl_detection.yml      # Detect WSL environment
+├── ssh.yml                    # Install/enable SSH server
 └── software/
     └── packages_utilities.yml # Essential utilities (htop, tmux, zsh, etc.)
 ```

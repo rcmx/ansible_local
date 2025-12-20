@@ -7,6 +7,10 @@
   - import_tasks: users.yml
 
 - block:
+  # configure ssh access
+  - import_tasks: ssh.yml
+
+- block:
   # install core software
   - import_tasks: software/packages_utilities.yml
   become: true

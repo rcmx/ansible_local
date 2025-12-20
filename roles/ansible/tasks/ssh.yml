@@ -1,0 +1,49 @@
+- name: ssh | install ssh server
+  tags: ssh,system
+  become: true
+  package:
+    name: "{{ ansible_ssh_server_package }}"
+    state: present
+
+- name: ssh | check for host key
+  tags: ssh,system
+  stat:
+    path: /etc/ssh/ssh_host_ed25519_key
+  register: ssh_host_ed25519
+
+- name: ssh | generate host keys if missing
+  tags: ssh,system
+  become: true
+  command: ssh-keygen -A
+  when: not ssh_host_ed25519.stat.exists
+  changed_when: true
+
+- name: ssh | enable and start ssh service
+  tags: ssh,system
+  become: true
+  service:
+    name: "{{ ansible_ssh_service_name }}"
+    enabled: true
+    state: started
+
+- name: ssh | set PasswordAuthentication no
+  tags: ssh,system
+  become: true
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication\\s+'
+    line: 'PasswordAuthentication no'
+    create: false
+    backup: false
+  notify: restart ssh service
+
+- name: ssh | set PubkeyAuthentication yes
+  tags: ssh,system
+  become: true
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PubkeyAuthentication\\s+'
+    line: 'PubkeyAuthentication yes'
+    create: false
+    backup: false
+  notify: restart ssh service
