@@ -1,0 +1,29 @@
+- block:
+  - name: system setup | kitty | install kitty (Ubuntu/Debian)
+    tags: packages,system,kitty
+    package:
+      name: kitty
+      state: present
+  when: ansible_facts["os_family"] == "Debian" and not is_wsl
+
+- block:
+  - name: system setup | kitty | install kitty (Fedora/RHEL)
+    tags: packages,system,kitty
+    package:
+      name: kitty
+      state: present
+  when: ansible_facts["os_family"] == "RedHat" and not is_wsl
+
+- block:
+  - name: system setup | kitty | install kitty (Arch Linux)
+    tags: packages,system,kitty
+    community.general.pacman:
+      name: kitty
+      state: present
+  when: ansible_facts["os_family"] == "Archlinux" and not is_wsl
+
+- name: system setup | kitty | skip kitty installation on WSL
+  tags: packages,system,kitty
+  debug:
+    msg: "Skipping kitty installation on WSL - terminal emulator not needed in WSL environment"
+  when: is_wsl

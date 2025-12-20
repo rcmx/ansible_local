@@ -61,12 +61,4 @@
     group: "{{ primary_user }}"
     mode: 0644
 
-- name: users | wezterm | copy wezterm.lua
-  tags: settings,dotfiles,wezterm
-  copy:
-    src: system_setup/wezterm.lua
-    dest: "{{ primary_user_home }}/.wezterm.lua"
-    owner: "{{ primary_user }}"
-    group: "{{ primary_user }}"
-    mode: 0644
 

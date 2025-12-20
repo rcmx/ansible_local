@@ -11,7 +11,7 @@ The core role is the foundation of the system configuration. It must be run firs
 - Essential package installation
 - Terminal and shell configuration (tmux, vim, zsh)
 - System automation via cron (ansible-pull every 10 minutes)
-- WezTerm terminal emulator setup
+- Kitty terminal emulator setup
 - Lazygit installation
 
 ## Dependencies
@@ -169,7 +169,8 @@ The role automatically configures `ansible-pull` via cron to run every 10 minute
 - Regular user account
 - Groups: `adm`, `ansible`, plus `sudo` (Debian) or `wheel` (RedHat/Arch)
 - Shell: `/bin/zsh`
-- Dotfiles configured: `.zshrc`, `.vimrc`, `.tmux.conf`, `.wezterm.lua`
+- Dotfiles configured: `.zshrc`, `.vimrc`, `.tmux.conf`
+- Terminal: Kitty installed (configuration managed separately)
 - SSH key configured via `primary_user_ssh_key` variable
 - Purpose: Primary interactive user account for workstation
 
@@ -193,9 +194,10 @@ The role copies dotfiles to the primary user home directory (configurable via `p
 | `.zshrc` | `roles/core/files/system_setup/zshrc` | `{{ primary_user_home }}/.zshrc` | Zsh shell configuration |
 | `.vimrc` | `roles/core/files/system_setup/vimrc` | `{{ primary_user_home }}/.vimrc` | Vim editor configuration |
 | `.tmux.conf` | `roles/core/files/system_setup/tmux.conf` | `{{ primary_user_home }}/.tmux.conf` | Tmux multiplexer configuration |
-| `.wezterm.lua` | `roles/core/files/system_setup/wezterm.lua` | `{{ primary_user_home }}/.wezterm.lua` | WezTerm terminal configuration |
 
 **Default:** Dotfiles are installed in `/home/velez/` when using the default `primary_user: velez` setting.
+
+**Note:** Kitty terminal configuration is not managed by this role. Configure kitty separately at `~/.config/kitty/kitty.conf`.
 
 ## Examples
 
@@ -263,7 +265,7 @@ If detection fails, `is_wsl` will be `false` and WSL-only skips won't apply.
 ## Platform-Specific Notes
 
 ### WSL (Windows Subsystem for Linux)
-- WezTerm installation is skipped (use Windows Terminal or WezTerm for Windows instead)
+- Kitty terminal installation is skipped (use Windows Terminal instead)
 - Docker installation is skipped (use Docker Desktop for Windows instead)
 - All other tools are installed normally
 - `is_wsl` flag is automatically set to control conditional execution
