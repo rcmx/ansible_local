@@ -2,9 +2,9 @@
   - name: system setup | utilities | add universe repository
     tags: packages,system
     apt_repository:
-      repo: "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} universe"
+      repo: "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_facts['distribution_release'] }} universe"
       state: present
-  when: ansible_distribution == 'Ubuntu'
+  when: ansible_facts["distribution"] == 'Ubuntu'
 
 - name: system setup | utilities | install utility packages (Ubuntu/Debian)
   tags: packages,system,settings

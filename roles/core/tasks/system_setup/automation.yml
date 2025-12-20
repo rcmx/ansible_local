@@ -25,7 +25,7 @@
 - name: Set cron service name fact
   tags: system
   set_fact:
-    cron_service: "{{ 'crond' if ansible_facts['os_family'] in ['RedHat', 'Archlinux'] else 'cron' }}"
+    cron_service: "{{ 'cronie' if ansible_facts['os_family'] == 'Archlinux' else ('crond' if ansible_facts['os_family'] == 'RedHat' else 'cron') }}"
 
 - name: Start and enable cron service
   tags: system
