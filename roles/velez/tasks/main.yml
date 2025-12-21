@@ -35,7 +35,6 @@
     repo: https://github.com/rcmx/dotfiles
     dest: "{{ primary_user_home }}/dotfiles"
     update: yes
-    owner: "{{ primary_user }}"
-    group: "{{ primary_user }}"
   become: true
+  become_user: "{{ primary_user }}"
   # Keep dotfiles updated for the primary user
