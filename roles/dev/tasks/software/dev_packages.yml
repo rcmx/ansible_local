@@ -4,7 +4,6 @@
   package:
     state: present
     name:
-      - neovim
       - curl
       - build-essential
   when: ansible_facts["os_family"] == "Debian"
@@ -14,7 +13,6 @@
   package:
     state: present
     name:
-      - neovim
       - curl
       - "@development-tools"
   when: ansible_facts["os_family"] == "RedHat"
@@ -24,7 +22,6 @@
   community.general.pacman:
     state: present
     name:
-      - neovim
       - curl
       - base-devel
   when: ansible_facts["os_family"] == "Archlinux"

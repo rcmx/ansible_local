@@ -1,0 +1,33 @@
+---
+- name: velez | packages | install core utilities (Ubuntu/Debian)
+  tags: packages,velez
+  package:
+    state: present
+    name:
+      - git
+      - htop
+      - tmux
+      - neovim
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: velez | packages | install core utilities (Fedora/RHEL)
+  tags: packages,velez
+  package:
+    state: present
+    name:
+      - git
+      - htop
+      - tmux
+      - neovim
+  when: ansible_facts["os_family"] == "RedHat"
+
+- name: velez | packages | install core utilities (Arch Linux)
+  tags: packages,velez
+  community.general.pacman:
+    state: present
+    name:
+      - git
+      - htop
+      - tmux
+      - neovim
+  when: ansible_facts["os_family"] == "Archlinux"

@@ -23,3 +23,19 @@
     key: "{{ primary_user_ssh_key }}"
     manage_dir: yes
   when: primary_user_exists.rc != 0
+
+- import_tasks: software/packages.yml
+- import_tasks: software/kitty.yml
+- import_tasks: software/lazygit.yml
+- import_tasks: fonts/installfonts.yml
+
+- name: users | dotfiles | clone rcmx dotfiles
+  tags: dotfiles,users
+  git:
+    repo: https://github.com/rcmx/dotfiles
+    dest: "{{ primary_user_home }}/dotfiles"
+    update: yes
+    owner: "{{ primary_user }}"
+    group: "{{ primary_user }}"
+  become: true
+  # Keep dotfiles updated for the primary user
