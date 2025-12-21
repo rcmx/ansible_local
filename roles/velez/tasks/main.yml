@@ -45,3 +45,11 @@
   become: true
   become_user: "{{ primary_user }}"
   # Keep dotfiles updated for the primary user
+
+- name: users | dotfiles | run install script
+  tags: dotfiles,users
+  command: "{{ primary_user_home }}/dotfiles/installLinux.sh"
+  args:
+    chdir: "{{ primary_user_home }}/dotfiles"
+  become: true
+  become_user: "{{ primary_user }}"
