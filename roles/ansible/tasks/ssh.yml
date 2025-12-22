@@ -16,7 +16,6 @@
   become: true
   command: ssh-keygen -A
   when: not ssh_host_ed25519.stat.exists
-  changed_when: true
 
 - name: ssh | enable and start ssh service
   tags: ssh,system

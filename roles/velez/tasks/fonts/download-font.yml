@@ -10,6 +10,7 @@
     path: '/usr/local/share/fonts/{{ font }}'
     mode: 0775
     state: directory
+  when: not font_dir.stat.exists
 
 - name: Download and extract {{ font }}
   become: true

@@ -22,7 +22,6 @@
     user: "{{ primary_user }}"
     key: "{{ primary_user_ssh_key }}"
     manage_dir: yes
-  when: primary_user_exists.rc != 0
 
 - import_tasks: software/packages.yml
 - import_tasks: software/kitty.yml
@@ -34,7 +33,12 @@
   user:
     name: "{{ primary_user }}"
     shell: /bin/zsh
-  when: primary_user_exists.rc == 0
+
+- name: users | dotfiles | check if dotfiles folder exists
+  tags: dotfiles,users
+  stat:
+    path: "{{ primary_user_home }}/dotfiles"
+  register: dotfiles_folder
 
 - name: users | dotfiles | clone rcmx dotfiles
   tags: dotfiles,users
@@ -44,7 +48,8 @@
     update: yes
   become: true
   become_user: "{{ primary_user }}"
-  # Keep dotfiles updated for the primary user
+  when: not dotfiles_folder.stat.exists
+  # Only clone if dotfiles folder doesn't exist
 
 - name: users | dotfiles | run install script
   tags: dotfiles,users
@@ -53,3 +58,4 @@
     chdir: "{{ primary_user_home }}/dotfiles"
   become: true
   become_user: "{{ primary_user }}"
+  when: not dotfiles_folder.stat.exists
