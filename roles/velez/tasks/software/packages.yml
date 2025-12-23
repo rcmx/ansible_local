@@ -5,6 +5,7 @@
     state: present
     name:
       - git
+      - stow
       - htop
       - tmux
       - neovim
@@ -16,6 +17,7 @@
     state: present
     name:
       - git
+      - stow
       - htop
       - tmux
       - neovim
@@ -27,6 +29,7 @@
     state: present
     name:
       - git
+      - stow
       - htop
       - tmux
       - neovim
