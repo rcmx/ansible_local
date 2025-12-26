@@ -1,5 +1,6 @@
 ---
 - name: software | docker | install docker (Ubuntu/Debian)
+  become: "{{ use_become }}"
   block:
     - name: software | docker | install prerequisites
       tags: packages,dev,docker
@@ -44,6 +45,7 @@
   when: ansible_facts["os_family"] == "Debian" and not is_wsl
 
 - name: software | docker | install docker (Fedora/RHEL)
+  become: "{{ use_become }}"
   block:
     - name: software | docker | add Docker repository
       tags: packages,dev,docker
@@ -74,6 +76,7 @@
   when: ansible_facts["os_family"] == "RedHat" and not is_wsl
 
 - name: software | docker | install docker (Arch Linux)
+  become: "{{ use_become }}"
   block:
     - name: software | docker | install Docker
       tags: packages,dev,docker

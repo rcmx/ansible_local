@@ -7,6 +7,7 @@
 
 - name: users | create primary user
   tags: users,system
+  become: "{{ use_become }}"
   user:
     name: "{{ primary_user }}"
     groups: "adm,ansible,{{ 'sudo' if ansible_facts['os_family'] == 'Debian' else 'wheel' }}"
@@ -18,6 +19,7 @@
 
 - name: users | ssh | add primary user ssh key
   tags: users,system
+  become: "{{ use_become }}"
   authorized_key:
     user: "{{ primary_user }}"
     key: "{{ primary_user_ssh_key }}"
@@ -30,6 +32,7 @@
 
 - name: users | shell | ensure zsh is default for primary user
   tags: users,system
+  become: "{{ use_become }}"
   user:
     name: "{{ primary_user }}"
     shell: /bin/zsh
@@ -46,7 +49,7 @@
     repo: https://github.com/rcmx/dotfiles
     dest: "{{ primary_user_home }}/dotfiles"
     update: yes
-  become: true
+  become: "{{ use_become }}"
   become_user: "{{ primary_user }}"
   when: not dotfiles_folder.stat.exists
   # Only clone if dotfiles folder doesn't exist
@@ -56,6 +59,6 @@
   command: "{{ primary_user_home }}/dotfiles/installLinux.sh"
   args:
     chdir: "{{ primary_user_home }}/dotfiles"
-  become: true
+  become: "{{ use_become }}"
   become_user: "{{ primary_user }}"
   when: not dotfiles_folder.stat.exists

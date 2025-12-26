@@ -11,17 +11,7 @@
   package:
     state: present
     name:
-      - htop
-      - mc
-      - tmux
-      - wget
-      - zsh
       - git
-      - luarocks
-      - ripgrep
-      - gcc
-      - build-essential
-      - fzf
   when: ansible_facts["os_family"] == "Debian"
 
 - name: system setup | utilities | install utility packages (Fedora/RHEL)
@@ -29,17 +19,7 @@
   package:
     state: present
     name:
-      - htop
-      - mc
-      - tmux
-      - wget
-      - zsh
       - git
-      - luarocks
-      - ripgrep
-      - gcc
-      - "@development-tools"
-      - fzf
   when: ansible_facts["os_family"] == "RedHat"
 
 - name: system setup | utilities | install utility packages (Arch Linux)
@@ -47,16 +27,6 @@
   community.general.pacman:
     state: present
     name:
-      - htop
-      - mc
-      - tmux
-      - wget
-      - zsh
       - git
-      - luarocks
-      - ripgrep
-      - gcc
-      - base-devel
-      - fzf
   when: ansible_facts["os_family"] == "Archlinux"
 

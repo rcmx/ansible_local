@@ -1,6 +1,7 @@
 ---
 - name: software | dev | install development packages (Ubuntu/Debian)
   tags: packages,dev,settings
+  become: "{{ use_become }}"
   package:
     state: present
     name:
@@ -10,6 +11,7 @@
 
 - name: software | dev | install development packages (Fedora/RHEL)
   tags: packages,dev,settings
+  become: "{{ use_become }}"
   package:
     state: present
     name:
@@ -19,6 +21,7 @@
 
 - name: software | dev | install development packages (Arch Linux)
   tags: packages,dev,settings
+  become: "{{ use_become }}"
   community.general.pacman:
     state: present
     name:

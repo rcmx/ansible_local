@@ -3,19 +3,28 @@
 - hosts: localhost
   connection: local
   gather_facts: true
-  become: true
 
   pre_tasks:
+    - name: Check if sudo is available
+      command: which sudo
+      register: sudo_check
+      ignore_errors: true
+      changed_when: false
+      failed_when: false
+
+    - name: Set become flag based on sudo availability
+      set_fact:
+        use_become: "{{ sudo_check.rc == 0 }}"
     - name: update repositories (Ubuntu/Debian)
       tags: always
-      become: true
+      become: "{{ use_become }}"
       apt: update_cache=yes
       changed_when: False
       when: ansible_facts["os_family"] == "Debian"
 
     - name: update repositories (Fedora/RHEL)
       tags: always
-      become: true
+      become: "{{ use_become }}"
       dnf:
         update_cache: yes
       changed_when: False
@@ -23,7 +32,7 @@
 
     - name: update repositories (Arch Linux)
       tags: always
-      become: true
+      become: "{{ use_become }}"
       community.general.pacman:
         update_cache: yes
       changed_when: False

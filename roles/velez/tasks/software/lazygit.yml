@@ -1,6 +1,7 @@
 ---
 - name: software | lazygit | install lazygit (Ubuntu/Debian)
   tags: packages,software
+  become: "{{ use_become }}"
   package:
     name: lazygit
     state: latest
@@ -10,12 +11,14 @@
   block:
     - name: software | lazygit | add COPR repository
       tags: packages,software
+      become: "{{ use_become }}"
       shell: dnf copr enable atim/lazygit -y
       args:
         creates: /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:atim:lazygit.repo
 
     - name: software | lazygit | install lazygit
       tags: packages,software
+      become: "{{ use_become }}"
       package:
         name: lazygit
         state: latest
@@ -25,6 +28,7 @@
   block:
     - name: software | lazygit | install lazygit
       tags: packages,software
+      become: "{{ use_become }}"
       community.general.pacman:
         name: lazygit
         state: latest

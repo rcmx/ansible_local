@@ -1,5 +1,6 @@
 ---
 - name: software | dotnet | install dotnet SDK (Ubuntu/Debian)
+  become: "{{ use_become }}"
   block:
     - name: software | dotnet | add Microsoft GPG key
       tags: packages,dev,dotnet
@@ -23,6 +24,7 @@
   when: ansible_facts["os_family"] == "Debian"
 
 - name: software | dotnet | install dotnet SDK (Fedora/RHEL)
+  become: "{{ use_become }}"
   block:
     - name: software | dotnet | add Microsoft repository
       tags: packages,dev,dotnet
@@ -44,6 +46,7 @@
   when: ansible_facts["os_family"] == "RedHat"
 
 - name: software | dotnet | install dotnet SDK (Arch Linux)
+  become: "{{ use_become }}"
   block:
     - name: software | dotnet | install dotnet SDK
       tags: packages,dev,dotnet

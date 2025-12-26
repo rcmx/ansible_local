@@ -1,5 +1,5 @@
 - name: restart ssh service
-  become: true
+  become: "{{ use_become }}"
   service:
     name: "{{ ansible_ssh_service_name }}"
     state: restarted

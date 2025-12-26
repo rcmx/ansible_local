@@ -6,6 +6,7 @@
   tags: fonts
 
 - name: Update font cache
+  become: "{{ use_become }}"
   ansible.builtin.shell: fc-cache -f
   changed_when: false
   tags: fonts

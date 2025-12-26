@@ -1,6 +1,6 @@
 - name: ssh | install ssh server
   tags: ssh,system
-  become: true
+  become: "{{ use_become }}"
   package:
     name: "{{ ansible_ssh_server_package }}"
     state: present
@@ -13,13 +13,13 @@
 
 - name: ssh | generate host keys if missing
   tags: ssh,system
-  become: true
+  become: "{{ use_become }}"
   command: ssh-keygen -A
   when: not ssh_host_ed25519.stat.exists
 
 - name: ssh | enable and start ssh service
   tags: ssh,system
-  become: true
+  become: "{{ use_become }}"
   service:
     name: "{{ ansible_ssh_service_name }}"
     enabled: true
@@ -27,7 +27,7 @@
 
 - name: ssh | set PasswordAuthentication no
   tags: ssh,system
-  become: true
+  become: "{{ use_become }}"
   lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^#?PasswordAuthentication\\s+'
@@ -36,13 +36,3 @@
     backup: false
   notify: restart ssh service
 
-- name: ssh | set PubkeyAuthentication yes
-  tags: ssh,system
-  become: true
-  lineinfile:
-    path: /etc/ssh/sshd_config
-    regexp: '^#?PubkeyAuthentication\\s+'
-    line: 'PubkeyAuthentication yes'
-    create: false
-    backup: false
-  notify: restart ssh service
