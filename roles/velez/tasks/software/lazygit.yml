@@ -1,10 +1,22 @@
 ---
 - name: software | lazygit | install lazygit (Ubuntu/Debian)
-  tags: packages,software
-  become: "{{ use_become }}"
-  package:
-    name: lazygit
-    state: latest
+  block:
+    - name: software | lazygit | get latest release version
+      tags: packages,software
+      uri:
+        url: https://api.github.com/repos/jesseduffield/lazygit/releases/latest
+        return_content: yes
+      register: lazygit_release
+
+    - name: software | lazygit | download and install from GitHub
+      tags: packages,software
+      become: "{{ use_become }}"
+      unarchive:
+        src: "https://github.com/jesseduffield/lazygit/releases/download/{{ lazygit_release.json.tag_name }}/lazygit_{{ lazygit_release.json.tag_name | regex_replace('^v', '') }}_Linux_x86_64.tar.gz"
+        dest: /usr/local/bin
+        remote_src: yes
+        mode: '0755'
+        creates: /usr/local/bin/lazygit
   when: ansible_facts["os_family"] == "Debian"
 
 - name: software | lazygit | install lazygit (Fedora/RHEL)
