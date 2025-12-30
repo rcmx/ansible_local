@@ -30,7 +30,7 @@
   become: "{{ use_become }}"
   lineinfile:
     path: /etc/ssh/sshd_config
-    regexp: '^#?PasswordAuthentication\\s+'
+    regexp: '^#?\s*PasswordAuthentication\s'
     line: 'PasswordAuthentication no'
     create: false
     backup: false
