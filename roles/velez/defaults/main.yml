@@ -10,3 +10,26 @@ primary_user_ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOH+GDuX+7RjQhBp5CM0v
 # Nerd fonts to install for the primary user
 fonts_to_install:
   - Hack
+
+# Core utilities to install across all platforms
+core_packages:
+  - git
+  - stow
+  - htop
+  - tmux
+  - neovim
+  - mc
+  - wget
+  - wl-clipboard
+  - zsh
+  - luarocks
+  - ripgrep
+  - fzf
+
+# Platform-specific package name mappings
+# Some packages have different names on different distributions
+package_names:
+  github_cli:
+    Debian: gh
+    RedHat: gh
+    Archlinux: github-cli
