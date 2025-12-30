@@ -25,6 +25,7 @@ core_packages:
   - luarocks
   - ripgrep
   - fzf
+  - fontconfig
 
 # Platform-specific package name mappings
 # Some packages have different names on different distributions
