@@ -26,6 +26,8 @@ core_packages:
   - ripgrep
   - fzf
   - fontconfig
+  - nodejs
+  - npm
 
 # Platform-specific package name mappings
 # Some packages have different names on different distributions

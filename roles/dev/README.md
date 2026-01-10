@@ -6,7 +6,7 @@ Development environment setup for workstation configuration. Provides programmin
 
 The dev role extends the core role with comprehensive development tools. It includes:
 
-- Node.js via NVM (Node Version Manager)
+- Node.js via system package manager
 - .NET SDK (versions 8.0 and 9.0)
 - Docker and Docker Compose
 - Development utilities (neovim, curl)
@@ -22,28 +22,9 @@ The dev role extends the core role with comprehensive development tools. It incl
 
 All variables are defined in `defaults/main.yml` and can be overridden at the playbook or inventory level.
 
-### NVM (Node Version Manager)
+### Node.js
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `nvm_version` | `v0.39.0` | NVM version to download and install. Used to install and manage Node.js versions. |
-
-**Usage:**
-```yaml
-# To use a different NVM version
-- hosts: localhost
-  vars:
-    nvm_version: "v0.40.0"  # Override to specific version
-  roles:
-    - dev
-```
-
-**Note:** After installation, NVM allows you to manage Node.js versions with commands like:
-```bash
-nvm install --lts      # Install latest LTS
-nvm use --lts          # Use LTS version
-nvm alias default lts/*  # Set as default
-```
+Node.js is installed using the system package manager for each OS. No role variables are required.
 
 ### Fonts Configuration
 
@@ -138,7 +119,7 @@ tasks/
 │   ├── docker.yml              # Docker and Docker Compose
 │   ├── fonts/
 │   │   └── download-font.yml   # Nerd fonts installation
-│   └── nvm_node.yml            # Node.js via NVM
+│   └── nodejs.yml              # Node.js via package manager
 └── fonts/
     ├── download-font.yml       # Font downloading
     └── install-fonts.yml       # Font system installation
@@ -146,30 +127,10 @@ tasks/
 
 ## Installation Details
 
-### Node.js (via NVM)
+### Node.js (via package manager)
 
-The role installs NVM which allows flexible Node.js version management:
-
-1. **Downloads NVM** from official repository (version specified in variables)
-2. **Sources NVM** in user shell configuration (`.zshrc`)
-3. **Installs latest LTS Node.js** automatically
-4. **Sets as default** for future shell sessions
-
-**Manual management after installation:**
-```bash
-# List available versions
-nvm list-remote --lts
-
-# Install specific version
-nvm install 20.0.0
-
-# Switch between versions
-nvm use 18.0.0
-nvm use 20.0.0
-
-# Set permanent default
-nvm alias default 20.0.0
-```
+The role installs Node.js and npm using the OS package manager.
+Version updates follow your distro's package repositories.
 
 ### .NET SDK
 
@@ -279,9 +240,9 @@ After running this role, the primary user (default: `velez`) has:
 
 - **Docker access:** Added to `docker` group (allows running Docker without `sudo`)
 - **SSH access:** Configured with provisioned SSH key via `primary_user_ssh_key`
-- **Shell:** ZSH with NVM and development configurations sourced
+- **Shell:** ZSH with development configurations sourced
 - **Development tools:** Full access to installed SDKs and utilities
-- **Node.js:** Managed via NVM in the user's home directory
+- **Node.js:** Managed via the system package manager
 
 **Note:** After adding the primary user to the `docker` group, they may need to log out and back in for group membership to take effect.
 
@@ -316,32 +277,6 @@ ansible-playbook dev.yml -K
     - dev
 ```
 
-### Use Specific NVM Version
-```yaml
----
-- hosts: localhost
-  connection: local
-  vars:
-    nvm_version: "v0.40.0"
-  roles:
-    - dev
-```
-
-### Install Specific Node.js Versions
-
-After role completion, manually manage Node.js versions:
-```bash
-# Install and use Node.js 18
-nvm install 18
-nvm use 18
-nvm alias node18 18
-
-# Install and use Node.js 20
-nvm install 20
-nvm use 20
-nvm alias default 20
-```
-
 ### Run Only Specific Tasks
 ```bash
 # Only install development packages
@@ -358,23 +293,6 @@ ansible-playbook dev.yml -K --skip-tags docker
 ```
 
 ## Troubleshooting
-
-### NVM Not Working in New Shell Session
-
-If NVM commands are not available:
-```bash
-# Check if .zshrc was updated
-grep -n "export NVM_DIR" ~/.zshrc
-grep -n "nvm.sh" ~/.zshrc
-
-# If not found, manually add to ~/.zshrc:
-echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
-echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> ~/.zshrc
-echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> ~/.zshrc
-
-# Reload shell
-exec $SHELL
-```
 
 ### Docker Permission Denied
 

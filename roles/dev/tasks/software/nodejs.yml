@@ -1,0 +1,83 @@
+---
+- name: software | nvm | remove nvm directory
+  tags: dev,nodejs
+  become: "{{ use_become }}"
+  file:
+    path: "{{ primary_user_home }}/.nvm"
+    state: absent
+
+- name: software | nvm | remove nvm init from shell rc files
+  tags: dev,nodejs
+  become: "{{ use_become }}"
+  lineinfile:
+    path: "{{ primary_user_home }}/{{ item.file }}"
+    regexp: "{{ item.regexp }}"
+    state: absent
+    create: false
+  loop:
+    - { file: ".zshrc", regexp: '^export NVM_DIR=' }
+    - { file: ".zshrc", regexp: 'nvm.sh' }
+    - { file: ".zshrc", regexp: 'bash_completion' }
+    - { file: ".bashrc", regexp: '^export NVM_DIR=' }
+    - { file: ".bashrc", regexp: 'nvm.sh' }
+    - { file: ".bashrc", regexp: 'bash_completion' }
+  ignore_errors: true
+
+- name: software | nodejs | install Node.js (Ubuntu/Debian)
+  tags: packages,dev,nodejs
+  become: "{{ use_become }}"
+  package:
+    name:
+      - nodejs
+      - npm
+    state: latest
+  when: ansible_facts["os_family"] == "Debian"
+
+- name: software | nodejs | install Node.js (Fedora/RHEL)
+  tags: packages,dev,nodejs
+  become: "{{ use_become }}"
+  package:
+    name:
+      - nodejs
+      - npm
+    state: latest
+  when: ansible_facts["os_family"] == "RedHat"
+
+- name: software | nodejs | install Node.js (Arch Linux)
+  tags: packages,dev,nodejs
+  become: "{{ use_become }}"
+  community.general.pacman:
+    name:
+      - nodejs
+      - npm
+    state: latest
+  when: ansible_facts["os_family"] == "Archlinux"
+
+- name: software | nodejs | ensure npm global directory exists
+  tags: dev,nodejs
+  become: "{{ use_become }}"
+  become_user: "{{ primary_user }}"
+  file:
+    path: "{{ primary_user_home }}/.local/npm-global"
+    state: directory
+    mode: '0755'
+
+- name: software | nodejs | configure npm global directory
+  tags: dev,nodejs
+  become: "{{ use_become }}"
+  become_user: "{{ primary_user }}"
+  command: npm config set prefix "{{ primary_user_home }}/.local/npm-global"
+  changed_when: false
+
+- name: software | nodejs | add npm global bin to PATH in shell rc files
+  tags: dev,nodejs
+  become: "{{ use_become }}"
+  lineinfile:
+    path: "{{ primary_user_home }}/{{ item }}"
+    regexp: '^export PATH=.*\.local/npm-global/bin'
+    line: 'export PATH="$HOME/.local/npm-global/bin:$PATH"'
+    create: true
+    state: present
+  loop:
+    - .zshrc
+    - .bashrc

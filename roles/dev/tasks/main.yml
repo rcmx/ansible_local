@@ -1,6 +1,6 @@
 - block:
   # install development tools
-  - import_tasks: software/nvm_node.yml
+  - import_tasks: software/nodejs.yml
   - import_tasks: software/dotnet.yml
   - import_tasks: software/dev_packages.yml
   - import_tasks: software/docker.yml

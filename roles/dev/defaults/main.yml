@@ -1,10 +1,6 @@
 ---
 # Development environment configuration
 
-# NVM (Node Version Manager) version
-# Version to download and install for node.js management
-nvm_version: "v0.39.0"
-
 # Development packages configuration
 # Different package names for different operating systems
 dev_packages_debian:
